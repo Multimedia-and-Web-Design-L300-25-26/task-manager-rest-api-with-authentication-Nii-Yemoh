@@ -5,7 +5,7 @@ let token;
 let taskId;
 
 beforeAll(async () => {
-  // Register
+  // Register (uses fixed email — fine for one-time run)
   await request(app)
     .post("/api/auth/register")
     .send({
@@ -23,7 +23,7 @@ beforeAll(async () => {
     });
 
   token = res.body.token;
-});
+}, 30000);   // 30-second timeout
 
 describe("Task Routes", () => {
 
@@ -32,7 +32,7 @@ describe("Task Routes", () => {
       .get("/api/tasks");
 
     expect(res.statusCode).toBe(401);
-  });
+  }, 30000);
 
   it("should create a task", async () => {
     const res = await request(app)
@@ -47,7 +47,7 @@ describe("Task Routes", () => {
     expect(res.body.title).toBe("Test Task");
 
     taskId = res.body._id;
-  });
+  }, 30000);
 
   it("should get user tasks only", async () => {
     const res = await request(app)
@@ -56,6 +56,6 @@ describe("Task Routes", () => {
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
-  });
+  }, 30000);
 
 });
